@@ -11,4 +11,9 @@ class HomePageController extends Controller
     {
         return view('frontend.homepage');
     }
+
+    public function blog()
+    {
+        return view('frontend.blog');
+    }
 }

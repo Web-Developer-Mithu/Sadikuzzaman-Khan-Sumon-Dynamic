@@ -15,3 +15,13 @@ use App\Http\Controllers\FronEnd\HomePageController;
 */
 
 Route::get("/", [App\Http\Controllers\FronEnd\HomePageController::class, 'index']);
+
+Route::get("blog", [App\Http\Controllers\FronEnd\HomePageController::class, 'blog']);
+
+Auth::routes([
+    'register' => false, // Disable registration routes
+    'reset' => false,    // Disable password reset routes
+    'verify' => false,   // Disable email verification routes
+]);
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

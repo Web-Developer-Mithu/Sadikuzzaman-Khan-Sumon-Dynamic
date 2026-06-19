@@ -2,6 +2,11 @@
     /* ═══════════════════════════════
        DESIGN TOKENS
     ═══════════════════════════════ */
+
+    html {
+  scroll-behavior: smooth;
+}
+
     :root {
       /* Backgrounds */
       --bg-page:      #fdf9f2;

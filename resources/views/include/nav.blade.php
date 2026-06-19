@@ -13,14 +13,14 @@
   <div class="nav-inner">
     <a href="#hero" class="nav-logo">Md. <span>Sadikuzzaman</span></a>
     <ul class="nav-links" id="nav-links" role="menubar">
-      <li role="none"><a href="#about"      role="menuitem">About</a></li>
-      <li role="none"><a href="#career"     role="menuitem">Career</a></li>
-      <li role="none"><a href="#leadership" role="menuitem">Leadership</a></li>
-      <li role="none"><a href="#education"  role="menuitem">Education</a></li>
-      <li role="none"><a href="#gallery"    role="menuitem">Gallery</a></li>
-      <li role="none"><a href="#journal"    role="menuitem">Journal</a></li>
-      <li role="none"><a href="#blog"    role="menuitem">Blog</a></li>
-      <li role="none"><a href="#contact"    role="menuitem">Contact</a></li>
+      <li role="none"><a href="{{ url('/#about') }}"      role="menuitem">About</a></li>
+      <li role="none"><a href="{{ url('/#career') }}"     role="menuitem">Career</a></li>
+      <li role="none"><a href="{{ url('/#leadership') }}" role="menuitem">Leadership</a></li>
+      <li role="none"><a href="{{ url('/#education') }}"  role="menuitem">Education</a></li>
+      <li role="none"><a href="{{ url('/#gallery') }}"    role="menuitem">Gallery</a></li>
+      <li role="none"><a href="{{ url('/#journal') }}"    role="menuitem">Journal</a></li>
+      <li role="none"><a href="{{ url('/blog') }}"    role="menuitem">Blog</a></li>
+      <li role="none"><a href="{{ url('/#contact') }}"    role="menuitem">Contact</a></li>
     </ul>
     <div class="nav-right">
       <button class="theme-btn" id="theme-toggle" aria-label="Toggle dark/light mode" title="Toggle theme"></button>
