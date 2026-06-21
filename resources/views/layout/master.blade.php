@@ -12,7 +12,8 @@
 <!-- NAVIGATION -->
 @include('include.nav');
 
-
+{{-- Content --}}
+@yield('content')
 
 
 {{-- Footer --}}

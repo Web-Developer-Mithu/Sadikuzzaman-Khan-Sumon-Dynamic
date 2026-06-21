@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FronEnd\HomePageController;
+use App\Http\Controllers\Admin\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,15 +14,30 @@ use App\Http\Controllers\FronEnd\HomePageController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
+// Frnotend Routes
 Route::get("/", [App\Http\Controllers\FronEnd\HomePageController::class, 'index']);
 
 Route::get("blog", [App\Http\Controllers\FronEnd\HomePageController::class, 'blog']);
 
+
+
+// Disable Registration, Password Reset, and Email Verification Routes
 Auth::routes([
     'register' => false, // Disable registration routes
     'reset' => false,    // Disable password reset routes
     'verify' => false,   // Disable email verification routes
 ]);
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// Backend Routes
+
+
+
+// Admin Routes (Protected by auth middleware)
+Route::middleware('auth')->group(function () {
+    Route::get('admin/logout', [AdminController::class, 'logout']);
+    Route::get('/admin/dashboard', [AdminController::class, 'dashboard']);
+    Route::get('/creat-blog&news', [AdminController::class, 'createBlogNews']);
+});
+
+
+
