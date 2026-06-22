@@ -145,7 +145,16 @@
             transition: background-color 0.35s ease, color 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
         }
 
+        .app-wrapper {
+            padding-top: 76px;
+        }
+
         .app-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1030;
             background: rgba(6, 12, 34, 0.88);
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18);
@@ -454,6 +463,7 @@
             box-shadow: 0 0 18px rgba(13, 110, 253, 0.22);
         }
     </style>
+    @stack('css')
 </head>
 <!--end::Head-->
 <!--begin::Body-->
@@ -502,41 +512,11 @@
                     </li>
                     <!--end::Fullscreen Toggle-->
 
-                    <!--begin::Color Mode Toggle (#6010)-->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link" href="#" id="bd-theme" aria-label="Toggle color scheme"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-sun-fill" data-lte-theme-icon="light"></i>
-                            <i class="bi bi-moon-fill d-none" data-lte-theme-icon="dark"></i>
-                            <i class="bi bi-circle-half d-none" data-lte-theme-icon="auto"></i>
+                    <!--begin::Color Mode Toggle-->
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="theme-toggle" aria-label="Toggle dark/light mode">
+                            <i class="bi bi-sun-fill" id="theme-toggle-icon"></i>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="bd-theme"
-                            style="--bs-dropdown-min-width: 8rem">
-                            <li>
-                                <button type="button" class="dropdown-item d-flex align-items-center"
-                                    data-bs-theme-value="light" aria-pressed="false">
-                                    <i class="bi bi-sun-fill me-2"></i>
-                                    Light
-                                    <i class="bi bi-check-lg ms-auto d-none"></i>
-                                </button>
-                            </li>
-                            <li>
-                                <button type="button" class="dropdown-item d-flex align-items-center"
-                                    data-bs-theme-value="dark" aria-pressed="false">
-                                    <i class="bi bi-moon-fill me-2"></i>
-                                    Dark
-                                    <i class="bi bi-check-lg ms-auto d-none"></i>
-                                </button>
-                            </li>
-                            <li>
-                                <button type="button" class="dropdown-item d-flex align-items-center active"
-                                    data-bs-theme-value="auto" aria-pressed="true">
-                                    <i class="bi bi-circle-half me-2"></i>
-                                    Auto
-                                    <i class="bi bi-check-lg ms-auto d-none"></i>
-                                </button>
-                            </li>
-                        </ul>
                     </li>
                     <!--end::Color Mode Toggle-->
 
@@ -595,8 +575,17 @@
             <div class="sidebar-wrapper">
                 <nav class="mt-2" aria-label="Main navigation">
                     <!--begin::Sidebar Menu-->
+
+
                     <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" data-accordion="false"
                         id="navigation">
+
+                         <li class="nav-item">
+                            <a href="{{ url('/admin/dashboard') }}" class="nav-link">
+                                <i class="nav-icon bi bi-circle text-info"></i>
+                                <p>Dashboard</p>
+                            </a>
+                        </li>
                         <li class="nav-item menu-open">
                             <a href="#" class="nav-link active">
                                 <i class="nav-icon bi bi-speedometer"></i>
@@ -607,13 +596,13 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="{{ url('/creat-blog&news') }}" class="nav-link active">
+                                    <a href="{{ url('/create-blog-news') }}" class="nav-link active">
                                         <i class="nav-icon bi bi-circle"></i>
                                         <p>Create Blog</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="./index2.html" class="nav-link">
+                                    <a href="{{ url('/admin/blog-list') }}" class="nav-link">
                                         <i class="nav-icon bi bi-circle"></i>
                                         <p>Blog List</p>
                                     </a>
@@ -664,6 +653,7 @@
     </div>
     <!--end::App Wrapper-->
     @include('Admin.admin_script')
+    @stack('scripts')
 </body>
 <!--end::Body-->
 

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FronEnd\HomePageController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\BlogsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,7 +37,11 @@ Auth::routes([
 Route::middleware('auth')->group(function () {
     Route::get('admin/logout', [AdminController::class, 'logout']);
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard']);
-    Route::get('/creat-blog&news', [AdminController::class, 'createBlogNews']);
+    Route::get('/create-blog-news', [AdminController::class, 'createBlogNews']);
+
+    Route::post('/storeblog', [BlogsController::class, 'storeBlog']);
+    Route::get('/admin/blog-list', [BlogsController::class, 'blogList']);
+        
 });
 
 

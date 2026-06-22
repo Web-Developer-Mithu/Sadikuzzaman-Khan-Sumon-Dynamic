@@ -41,66 +41,47 @@
         });
     </script>
     <!--end::OverlayScrollbars Configure-->
-    <!--begin::Color Mode Toggle (#6010)-->
+    <!--begin::Color Mode Toggle-->
     <script>
         (() => {
             'use strict';
 
             const STORAGE_KEY = 'lte-theme';
-
             const getStoredTheme = () => localStorage.getItem(STORAGE_KEY);
             const setStoredTheme = (theme) => localStorage.setItem(STORAGE_KEY, theme);
-
             const prefersDark = () => globalThis.matchMedia('(prefers-color-scheme: dark)').matches;
-
-            const getPreferredTheme = () => {
-                const stored = getStoredTheme();
-                if (stored) return stored;
+            const resolveTheme = (theme) => {
+                if (theme === 'dark' || theme === 'light') return theme;
                 return prefersDark() ? 'dark' : 'light';
             };
 
-            const setTheme = (theme) => {
-                const resolved = theme === 'auto' ? (prefersDark() ? 'dark' : 'light') : theme;
+            const applyTheme = (theme) => {
+                const resolved = resolveTheme(theme);
                 document.documentElement.setAttribute('data-bs-theme', resolved);
+                document.documentElement.style.colorScheme = resolved;
+                const icon = document.getElementById('theme-toggle-icon');
+                if (!icon) return;
+                icon.classList.toggle('bi-sun-fill', resolved === 'light');
+                icon.classList.toggle('bi-moon-fill', resolved === 'dark');
+                icon.classList.toggle('bi-sun-fill', resolved !== 'dark');
+                icon.classList.toggle('bi-moon-fill', resolved === 'dark');
             };
 
-            setTheme(getPreferredTheme());
-
-            const showActiveTheme = (theme) => {
-                // Highlight the active dropdown option
-                document.querySelectorAll('[data-bs-theme-value]').forEach((el) => {
-                    el.classList.remove('active');
-                    el.setAttribute('aria-pressed', 'false');
-                    const check = el.querySelector('.bi-check-lg');
-                    if (check) check.classList.add('d-none');
-                });
-                const active = document.querySelector(`[data-bs-theme-value="${theme}"]`);
-                if (active) {
-                    active.classList.add('active');
-                    active.setAttribute('aria-pressed', 'true');
-                    const check = active.querySelector('.bi-check-lg');
-                    if (check) check.classList.remove('d-none');
-                }
-                // Sync the topbar trigger icon
-                document.querySelectorAll('[data-lte-theme-icon]').forEach((icon) => {
-                    icon.classList.toggle('d-none', icon.dataset.lteThemeIcon !== theme);
-                });
-            };
-
-            globalThis.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+            const currentTheme = () => {
                 const stored = getStoredTheme();
-                if (!stored || stored === 'auto') setTheme(getPreferredTheme());
-            });
+                return stored ? resolveTheme(stored) : resolveTheme('auto');
+            };
 
             document.addEventListener('DOMContentLoaded', () => {
-                showActiveTheme(getPreferredTheme());
-                document.querySelectorAll('[data-bs-theme-value]').forEach((toggle) => {
-                    toggle.addEventListener('click', () => {
-                        const theme = toggle.getAttribute('data-bs-theme-value');
-                        setStoredTheme(theme);
-                        setTheme(theme);
-                        showActiveTheme(theme);
-                    });
+                applyTheme(currentTheme());
+                const toggle = document.getElementById('theme-toggle');
+                if (!toggle) return;
+
+                toggle.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    const nextTheme = currentTheme() === 'dark' ? 'light' : 'dark';
+                    setStoredTheme(nextTheme);
+                    applyTheme(nextTheme);
                 });
             });
         })();
