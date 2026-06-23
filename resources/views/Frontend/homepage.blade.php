@@ -21,7 +21,7 @@
 
       <div class="hero-photo-ring"></div>
 
-      <img src="{{ asset('img/profile.jpg') }}" alt="Md. Sadikuzzaman" class="hero-photo">
+      <img src="{{ isset($profileImage) ? asset('profile-images/' . $profileImage) : asset('img/profile.jpg') }}" alt="{{ $profileName ?? 'Md. Sadikuzzaman' }}" class="hero-photo">
 
     </div>
 
@@ -29,21 +29,19 @@
     <div class="hero-content">
 
       <div class="hero-eyebrow">
-        Educator • Academic Leader • PhD Researcher
+        {{ $heroTagline ?? 'Educator • Academic Leader • PhD Researcher' }}
       </div>
 
       <h1 class="hero-name">
-        Md. Sadikuzzaman
+        {{ $profileName ?? 'Md. Sadikuzzaman' }}
       </h1>
 
       <p class="hero-title">
-        Principal,  PhD Candidate, Educationalist
+        {{ $heroTitle ?? 'Principal,  PhD Candidate, Educationalist' }}
       </p>
 
       <p class="hero-desc">
-        Principal of Daulatpur College, Bangladesh, with 23 years of distinguished service in education. Currently pursuing a
-        Doctor of Philosophy in Education at GenoVasi University College, Malaysia, advancing knowledge in Design Thinking and
-        Educational Leadership.
+        {{ $heroDescription ?? 'Principal of Daulatpur College, Bangladesh, with 23 years of distinguished service in education. Currently pursuing a Doctor of Philosophy in Education at GenoVasi University College, Malaysia, advancing knowledge in Design Thinking and Educational Leadership.' }}
 
       </p>
 
@@ -52,6 +50,26 @@
         <span class="badge">Principal , Daulatpur College</span>
         <span class="badge">Senate Member , National University BD</span>
       </div>
+
+      @if($linkedin || $facebook || $twitter || $instagram || $wikipedia)
+      <div class="social-links" style="margin-top:16px; display:flex; gap:12px; flex-wrap:wrap;">
+        @if($linkedin)
+          <a href="{{ $linkedin }}" target="_blank" rel="noopener noreferrer" class="badge bg-secondary text-white">LinkedIn</a>
+        @endif
+        @if($facebook)
+          <a href="{{ $facebook }}" target="_blank" rel="noopener noreferrer" class="badge bg-secondary text-white">Facebook</a>
+        @endif
+        @if($twitter)
+          <a href="{{ $twitter }}" target="_blank" rel="noopener noreferrer" class="badge bg-secondary text-white">Twitter</a>
+        @endif
+        @if($instagram)
+          <a href="{{ $instagram }}" target="_blank" rel="noopener noreferrer" class="badge bg-secondary text-white">Instagram</a>
+        @endif
+        @if($wikipedia)
+          <a href="{{ $wikipedia }}" target="_blank" rel="noopener noreferrer" class="badge bg-secondary text-white">Wikipedia</a>
+        @endif
+      </div>
+      @endif
 
     </div>
 
@@ -366,31 +384,54 @@
   </section>
 
   <!-- GALLERY -->
+  @if(isset($galleryItems) && $galleryItems->isNotEmpty())
   <section class="section" id="gallery" aria-labelledby="gallery-title">
     <div class="section-header reveal">
       <span class="section-eyebrow">Gallery</span>
-      <h2 class="section-title" id="gallery-title">At GenoVasi University College, Malaysia</h2>
+      <h2 class="section-title" id="gallery-title">Photo Gallery</h2>
     </div>
     <div class="gallery reveal">
-      <div class="gallery-item">
-        <img src="{{ asset('img/PhD-Programme.png') }}" alt="PhD Programme at GenoVasi University College, Malaysia" loading="lazy">
-        <div class="gallery-overlay"><span class="gallery-overlay-text">PhD Programme , GenoVasi University College, Malaysia</span></div>
-        <p class="gallery-caption">PhD Programme , GenoVasi University College, Malaysia</p>
+      @foreach($galleryItems as $item)
+      <div class="gallery-item" style="transition-delay: {{ $loop->index * 0.1 }}s">
+        <img src="{{ $item->image_url }}" alt="{{ $item->title }}" loading="lazy">
+        <div class="gallery-overlay"><span class="gallery-overlay-text">{{ $item->title }}</span></div>
+        <p class="gallery-caption">{{ $item->title }}</p>
       </div>
-      <div class="gallery-item" style="transition-delay:.1s">
-        <img src="{{ asset('img/GenoVasi-2.jpg') }}" alt="With Peers at GenoVasi University College" loading="lazy">
-        <div class="gallery-overlay"><span class="gallery-overlay-text">With Peers at GenoVasi University College</span></div>
-        <p class="gallery-caption">With Peers at GenoVasi University College</p>
-      </div>
-      <div class="gallery-item" style="transition-delay:.2s">
-        <img src="{{ asset('img/download (3).jpg') }}" alt="Academic Community at GenoVasi University College" loading="lazy">
-        <div class="gallery-overlay"><span class="gallery-overlay-text">Academic Community at GenoVasi University College</span></div>
-        <p class="gallery-caption">Academic Community at GenoVasi University College</p>
-      </div>
+      @endforeach
     </div>
   </section>
+  @endif
 
 </div>
+
+<!-- JOURNALS -->
+@if(isset($journals) && $journals->isNotEmpty())
+<div class="container">
+  <section class="section" id="journal" aria-labelledby="journal-title">
+    <div class="section-header reveal">
+      <span class="section-eyebrow">Journal</span>
+      <h2 class="section-title" id="journal-title">Recent Journals</h2>
+    </div>
+    <div class="row">
+      @foreach($journals as $j)
+      <div class="col-md-6 mb-4">
+        <div class="card">
+          @if($j->image)
+            <img src="{{ asset('journal-images/'.$j->image) }}" class="card-img-top" alt="">
+          @endif
+          <div class="card-body">
+            <h5 class="card-title"><a href="{{ url('/journals/'.$j->slug) }}">{{ $j->title }}</a></h5>
+            <p class="card-text"><strong>{{ $j->authors }}</strong> — {{ $j->journal_name }}</p>
+            <p class="card-text">{{ \Illuminate\Support\Str::limit($j->abstract, 140) }}</p>
+            <a href="{{ url('/journals/'.$j->slug) }}" class="btn btn-sm btn-primary">Read</a>
+          </div>
+        </div>
+      </div>
+      @endforeach
+    </div>
+  </section>
+</div>
+@endif
 
 <!-- QUOTE -->
 <div class="quote-section" aria-label="Featured quote">
@@ -413,18 +454,41 @@
       <div class="contact-card reveal">
         <div class="contact-icon-wrap" aria-hidden="true">&#128222;</div>
         <h4>Phone</h4>
-        <p>+601 4308 7663 (Malaysia)<br>+880 1711 247663 (Bangladesh)</p>
+        <p>{{ $phone ?? '+601 4308 7663 (Malaysia)' }}</p>
       </div>
       <div class="contact-card reveal" style="transition-delay:.12s">
         <div class="contact-icon-wrap" aria-hidden="true">&#9993;&#65039;</div>
         <h4>Email</h4>
-        <p>sadikuzzamandpurcollege@gmail.com</p>
+        <p>{{ $contactEmail ?? 'sadikuzzamandpurcollege@gmail.com' }}</p>
       </div>
       <div class="contact-card reveal" style="transition-delay:.24s">
         <div class="contact-icon-wrap" aria-hidden="true">&#128205;</div>
         <h4>Address</h4>
-        <p>Daulatpur, Rifayetpur, Kushtia, Bangladesh</p>
+        <p>{{ $address ?? 'Daulatpur, Rifayetpur, Kushtia, Bangladesh' }}</p>
       </div>
+      @if($linkedin || $facebook || $twitter || $instagram || $wikipedia)
+      <div class="contact-card reveal" style="transition-delay:.36s; width:100%;">
+        <div class="contact-icon-wrap" aria-hidden="true">&#128279;</div>
+        <h4>Social Links</h4>
+        <div style="display:flex; flex-wrap:wrap; gap:10px; margin-top:8px;">
+          @if($linkedin)
+            <a href="{{ $linkedin }}" target="_blank" rel="noopener noreferrer" class="badge bg-secondary text-white">LinkedIn</a>
+          @endif
+          @if($facebook)
+            <a href="{{ $facebook }}" target="_blank" rel="noopener noreferrer" class="badge bg-secondary text-white">Facebook</a>
+          @endif
+          @if($twitter)
+            <a href="{{ $twitter }}" target="_blank" rel="noopener noreferrer" class="badge bg-secondary text-white">Twitter</a>
+          @endif
+          @if($instagram)
+            <a href="{{ $instagram }}" target="_blank" rel="noopener noreferrer" class="badge bg-secondary text-white">Instagram</a>
+          @endif
+          @if($wikipedia)
+            <a href="{{ $wikipedia }}" target="_blank" rel="noopener noreferrer" class="badge bg-secondary text-white">Wikipedia</a>
+          @endif
+        </div>
+      </div>
+      @endif
     </div>
   </section>
 

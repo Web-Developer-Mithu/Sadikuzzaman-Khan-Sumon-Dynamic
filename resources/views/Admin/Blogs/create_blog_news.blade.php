@@ -416,8 +416,13 @@
 
   <!-- ============ BLOG POST FORM ============ -->
   <div class="form-panel active" id="panel-blog">
+  @if(isset($blog))
+  <form action="{{ url('/admin/update-blog/'.$blog->id) }}" method="POST" enctype="multipart/form-data" id="blogForm">
+    @csrf
+  @else
   <form action="{{ url('/storeblog') }}" method="POST" enctype="multipart/form-data" id="blogForm">
     @csrf
+  @endif
     <div class="form-card">
 
       <div class="section-label">Basics</div>
@@ -425,7 +430,7 @@
       <div class="field-row single">
         <div class="field">
           <label for="blog-title">Blog Title <span class="req">*</span></label>
-          <input class="input" id="blog-title" name="blog-title" type="text" value="{{ old('blog-title') }}" placeholder="e.g. Moving from Memorization to a Culture of Questions" maxlength="120">
+          <input class="input" id="blog-title" name="blog-title" type="text" value="{{ old('blog-title', isset($blog) ? $blog->{'blog-title'} : '') }}" placeholder="e.g. Moving from Memorization to a Culture of Questions" maxlength="120">
           @error('blog-title', 'blog') <div class="field-error">{{ $message }}</div> @enderror
           <div class="slug-preview">URL: yoursite.com/blog/<span id="slug-out">your-post-title</span></div>
         </div>
@@ -434,7 +439,7 @@
       <div class="field-row single">
         <div class="field">
           <label for="blog-subtitle">Subtitle <span class="hint">Shown on the card — keep it to 1–2 sentences</span></label>
-          <textarea class="input" id="blog-subtitle" name="subtitle" rows="2" maxlength="180" placeholder="A short subtitle that appears under the title on the listing page.">{{ old('subtitle') }}</textarea>
+          <textarea required class="input" id="blog-subtitle" name="subtitle" rows="2" maxlength="180" placeholder="A short subtitle that appears under the title on the listing page.">{{ old('subtitle', isset($blog) ? $blog->subtitle : '') }}</textarea>
           <div class="char-count" id="subtitle-count">0 / 180</div>
           @error('subtitle', 'blog') <div class="field-error">{{ $message }}</div> @enderror
         </div>
@@ -443,25 +448,36 @@
       <div class="field-row">
         <div class="field">
           <label for="blog-publication-name">Publication Name (If Applicable)</label>
-          <input class="input" id="blog-publication-name" name="publication_name" type="text" value="{{ old('publication_name') }}" placeholder="e.g. The Daily Star">
+          <input class="input" id="blog-publication-name" name="publication_name" type="text" value="{{ old('publication_name', isset($blog) ? $blog->publication_name : '') }}" placeholder="e.g. The Daily Star">
           @error('publication_name', 'blog') <div class="field-error">{{ $message }}</div> @enderror
         </div>
         <div class="field">
           <label for="blog-article-url">Article URL/Reference (If Applicable)</label>
-          <input class="input" id="blog-article-url" name="article_url" type="url" value="{{ old('article_url') }}" placeholder="https://www.example.com/article">
+          <input class="input" id="blog-article-url" name="article_url" type="url" value="{{ old('article_url', isset($blog) ? $blog->article_url : '') }}" placeholder="https://www.example.com/article">
           @error('article_url', 'blog') <div class="field-error">{{ $message }}</div> @enderror
         </div>
       </div>
 
-      <div class="section-label">Cover Image</div>
+        <div class="field-row single">
+          <div class="field">
+            <label for="blog-publication-date">Publication Date (If Applicable)</label>
+            <input class="input" id="blog-publication-date" name="publication_date" type="date" value="{{ old('publication_date', isset($blog) ? $blog->publication_date : '') }}">
+            @error('publication_date', 'blog') <div class="field-error">{{ $message }}</div> @enderror
+          </div>
+        </div>
+
+        <div class="section-label">Cover Image</div>
       <div class="field-row single">
         <label class="dropzone" id="blog-dropzone" for="blog-img-input">
           <div class="dz-icon">⤓</div>
           <div class="dz-title">Click to upload, or drag an image here</div>
           <div class="dz-sub">Recommended 1200×630px · JPG or PNG</div>
         </label>
-        <input type="file" name="img" id="blog-img-input" accept="image/*" style="display:none;">
+        <input {{ isset($blog) ? '' : 'required' }} type="file" name="img" id="blog-img-input" accept="image/*" style="display:none;">
         @error('img', 'blog') <div class="field-error">{{ $message }}</div> @enderror
+        @if(isset($blog) && $blog->img)
+          <div style="margin-top:8px;"><img src="{{ asset('blog-images/'.$blog->img) }}" alt="Current image" style="max-width:240px; border:1px solid #e2e8f0; border-radius:6px; padding:4px;"></div>
+        @endif
       </div>
 
       <div class="section-label">Full Article</div>
@@ -482,11 +498,11 @@
               <button type="button" class="tb-btn" data-cmd="ul" title="Bullet list">•≡</button>
               <button type="button" class="tb-btn" data-cmd="clear" title="Clear formatting">Tx</button>
             </div>
-            <div class="editor-body" id="blog-editor" contenteditable="true" data-placeholder="Start writing your post here…">{!! old('description') !!}</div>
+            <div class="editor-body" id="blog-editor" contenteditable="true" data-placeholder="Start writing your post here…">{!! old('description', isset($blog) ? $blog->description : '') !!}</div>
           </div>
           <!-- Hidden field: JS copies the editor's HTML here right before submit, since
                contenteditable divs don't submit their content on their own. -->
-          <input type="hidden" name="description" id="blog-description-hidden">
+          <input required type="hidden" name="description" id="blog-description-hidden">
           <div class="helptext">Select text and use the toolbar to format it. This becomes the full article shown when readers click into the post.</div>
           @error('description', 'blog') <div class="field-error">{{ $message }}</div> @enderror
         </div>
@@ -497,7 +513,7 @@
     <div class="action-bar">
       <div class="autosave-note"><span class="autosave-dot"></span><span id="autosaveText">Unsaved changes are not kept on reload</span></div>
       <div class="btn-group">
-        <button class="btn btn-solid" type="submit">Publish</button>
+        <button class="btn btn-solid" type="submit">{{ isset($blog) ? 'Update' : 'Publish' }}</button>
       </div>
     </div>
   </form>

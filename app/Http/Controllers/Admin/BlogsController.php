@@ -26,6 +26,7 @@ class BlogsController extends Controller
         $blog->{'blog-title'} = $request->input('blog-title');
         $blog->subtitle   = $request->input('subtitle');
         $blog->publication_name = $request->input('publication_name');
+        $blog->publication_date = $request->input('publication_date');
         $blog->article_url = $request->input('article_url');
         $blog->description = $request->input('description');
 
@@ -57,8 +58,69 @@ class BlogsController extends Controller
 
     public function blogList()
     {
-   
-        return view('Admin.Blogs.blogList');
+        // Paginate blogs (10 per page) and show newest first
+        $blogs = Blog::orderBy('created_at', 'desc')->paginate(10);
+        return view('Admin.Blogs.blogList', compact('blogs'));
     
     }
+
+    public function deleteBlog($id){
+        $blog = Blog::find($id);
+        
+        // Delete image from public/blog-images folder
+        if($blog->img && file_exists(public_path('blog-images/' . $blog->img))){
+            unlink(public_path('blog-images/' . $blog->img));
+        }
+        
+        // Delete blog from database
+        $blog->delete();
+        return redirect()->back()->with('success', 'Blog deleted successfully!');
+    }
+
+    // Show edit form
+    public function editBlog($id)
+    {
+        $blog = Blog::findOrFail($id);
+        // Reuse the create form for editing — view will detect $blog
+        return view('Admin.Blogs.create_blog_news', compact('blog'));
+    }
+
+    // Handle update
+    public function updateBlog(Request $request, $id)
+    {
+        $blog = Blog::findOrFail($id);
+
+        $blog->{'blog-title'} = $request->input('blog-title');
+        $blog->subtitle   = $request->input('subtitle');
+        $blog->publication_name = $request->input('publication_name');
+        $blog->publication_date = $request->input('publication_date');
+        $blog->article_url = $request->input('article_url');
+        $blog->description = $request->input('description');
+
+        // If a new image uploaded, remove old and store new
+        if ($request->hasFile('img') && $request->file('img')->isValid()) {
+            // delete old image
+            if ($blog->img && file_exists(public_path('blog-images/' . $blog->img))) {
+                unlink(public_path('blog-images/' . $blog->img));
+            }
+
+            $file = $request->file('img');
+            $extension = $file->getClientOriginalExtension();
+            $slug = Str::slug($request->input('blog-title')) ?: 'blog';
+            $timestamp = now()->timestamp;
+            $filename = "{$slug}-{$timestamp}.{$extension}";
+
+            $publicBlogPath = public_path('blog-images');
+            if (!is_dir($publicBlogPath)) {
+                mkdir($publicBlogPath, 0755, true);
+            }
+
+            $file->move($publicBlogPath, $filename);
+            $blog->img = $filename;
+        }
+
+        $blog->save();
+        return redirect('/admin/blog-list')->with('success', 'Blog updated successfully!');
+    }
+
 }

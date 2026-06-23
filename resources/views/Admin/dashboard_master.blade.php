@@ -145,6 +145,17 @@
             transition: background-color 0.35s ease, color 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
         }
 
+        /* Prevent visual overflow inside cards and main content */
+        .card,
+        .card .card-body,
+        .app-main,
+        .app-main img,
+        .app-main table {
+            overflow: hidden;
+            max-width: 100%;
+            word-break: break-word;
+        }
+
         .app-wrapper {
             padding-top: 76px;
         }
@@ -484,7 +495,7 @@
                     </li>
                     <li class="nav-item d-none d-lg-flex">
                         <a href="{{ url('/admin/dashboard') }}" class="navbar-brand text-white fw-semibold ms-2">
-                            Sumon Admin <span class="badge bg-info ms-2 text-dark">Premium</span>
+                            Sumon Admin
                         </a>
                     </li>
                 </ul>
@@ -523,18 +534,18 @@
                     <!--begin::User Menu Dropdown-->
                     <li class="nav-item dropdown user-menu">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <img src="{{ asset('img/profile.jpg') }}" class="user-image rounded-circle shadow"
-                                alt="User Image" />
-                            <span class="d-none d-md-inline">Md. Sadikuzzaman</span>
+                            <img src="{{ auth()->user()->profile_image ? asset('profile-images/' . auth()->user()->profile_image) : asset('img/profile.jpg') }}" class="user-image rounded-circle shadow"
+                                alt="{{ auth()->user()->name }}" />
+                            <span class="d-none d-md-inline">{{ auth()->user()->name }}</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                             <!--begin::User Image-->
                             <li class="user-header text-bg-primary">
-                                <img src="{{ asset('img/profile.jpg') }}" class="rounded-circle shadow"
-                                    alt="User Image" />
+                                <img src="{{ auth()->user()->profile_image ? asset('profile-images/' . auth()->user()->profile_image) : asset('img/profile.jpg') }}" class="rounded-circle shadow"
+                                    alt="{{ auth()->user()->name }}" />
                                 <p>
-                                    Md. Sadikuzzaman
-                                    <small>Principal Of Daulatpur College</small>
+                                    {{ auth()->user()->name }}
+                                    <small>{{ auth()->user()->hero_title ?? 'Principal Of Daulatpur College' }}</small>
                                 </p>
                             </li>
                             <!--end::User Image-->
@@ -543,7 +554,7 @@
                             <!--end::Menu Body-->
                             <!--begin::Menu Footer-->
                             <li class="user-footer">
-                                <a href="#" class="btn btn-outline-secondary">Profile</a>
+                                <a href="{{ url('/admin/profile') }}" class="btn btn-outline-secondary">Profile</a>
                                 <form action="{{ url('/admin/logout') }}" method="get" class="d-inline float-end">
                                     @csrf
                                     <button type="submit" class="btn btn-outline-danger">Log out</button>
@@ -605,6 +616,39 @@
                                     <a href="{{ url('/admin/blog-list') }}" class="nav-link">
                                         <i class="nav-icon bi bi-circle"></i>
                                         <p>Blog List</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        
+
+                        <li class="nav-item">
+                            <a href="{{ url('/admin/journals') }}" class="nav-link">
+                                <i class="nav-icon bi bi-journal-bookmark"></i>
+                                <p>Journals <span class="badge bg-info ms-2 text-dark">New</span></p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon bi bi-folder2-open"></i>
+                                <p>
+                                    Manage
+                                    <i class="nav-arrow bi bi-chevron-right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{{ url('/admin/gallery') }}" class="nav-link">
+                                        <i class="nav-icon bi bi-circle"></i>
+                                        <p>Gallery</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ url('/admin/profile') }}" class="nav-link">
+                                        <i class="nav-icon bi bi-circle"></i>
+                                        <p>Profile Update</p>
                                     </a>
                                 </li>
                             </ul>

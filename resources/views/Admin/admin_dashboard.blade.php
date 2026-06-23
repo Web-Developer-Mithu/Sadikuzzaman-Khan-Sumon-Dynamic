@@ -29,8 +29,8 @@
                         <div class="metric-box p-4">
                             <div class="d-flex align-items-center justify-content-between mb-3">
                                 <div>
-                                    <h4>1,284</h4>
-                                    <p class="mb-0">New visitors this week</p>
+                                    <h4>{{ $blogCount ?? 0 }}</h4>
+                                    <p class="mb-0">Total Blogs</p>
                                 </div>
                                 <div class="icon shadow-sm">
                                     <i class="bi bi-graph-up-arrow fs-4"></i>
@@ -46,8 +46,8 @@
                         <div class="metric-box p-4">
                             <div class="d-flex align-items-center justify-content-between mb-3">
                                 <div>
-                                    <h4>92%</h4>
-                                    <p class="mb-0">Server uptime</p>
+                                    <h4>{{ $journalCount ?? 0 }}</h4>
+                                    <p class="mb-0">Total Journals</p>
                                 </div>
                                 <div class="icon shadow-sm">
                                     <i class="bi bi-lightning-charge-fill fs-4"></i>
@@ -63,8 +63,8 @@
                         <div class="metric-box p-4">
                             <div class="d-flex align-items-center justify-content-between mb-3">
                                 <div>
-                                    <h4>11</h4>
-                                    <p class="mb-0">Pending approvals</p>
+                                    <h4>{{ $pendingApprovals ?? 0 }}</h4>
+                                    <p class="mb-0">Pending approvals (Journal drafts)</p>
                                 </div>
                                 <div class="icon shadow-sm">
                                     <i class="bi bi-clock-history fs-4"></i>
@@ -109,6 +109,7 @@
                             </div>
                         </div>
                     </div>
+                            
                 </div>
                 <!--end::Main cards row-->
             </div>

@@ -103,5 +103,94 @@
 
   // New Navbar Scroll Effect
 
-  
+  const blogSlideOverlay = document.getElementById('blogSlideOverlay');
+  const blogSlidePanel = document.getElementById('blogSlidePanel');
+  const blogSlideClose = document.getElementById('blogSlideClose');
+  const blogSlideImage = document.getElementById('blogSlideImage');
+  const blogSlideTitleText = document.getElementById('blogSlideTitleText');
+  const blogSlideSubtitleText = document.getElementById('blogSlideSubtitleText');
+  const blogSlideDescriptionText = document.getElementById('blogSlideDescriptionText');
+  const blogPublicationInfo = document.getElementById('blogPublicationInfo');
+  const blogArticleUrl = document.getElementById('blogArticleUrl');
+  const blogSlideDate = document.getElementById('blogSlideDate');
+
+  function closeBlogSlide() {
+    if (!blogSlidePanel) return;
+    blogSlidePanel.classList.remove('open');
+    blogSlideOverlay.classList.remove('visible');
+    blogSlidePanel.setAttribute('aria-hidden', 'true');
+  }
+
+  function openBlogSlide(details) {
+    if (!blogSlidePanel) return;
+    blogSlideTitleText.textContent = details.title || 'Untitled';
+    blogSlideSubtitleText.textContent = details.subtitle || 'No subtitle.';
+    const descriptionHtml = details.description || '<p>No description available.</p>';
+    blogSlideDescriptionText.innerHTML = descriptionHtml;
+    blogSlideDate.textContent = details.publicationDate ? 'Publication Date: ' + details.publicationDate : '';
+
+    if (details.image) {
+      blogSlideImage.src = details.image;
+      blogSlideImage.style.display = 'block';
+      blogSlideImage.alt = details.title || 'Blog image';
+    } else {
+      blogSlideImage.style.display = 'none';
+    }
+
+    if (details.publicationName) {
+      blogPublicationInfo.style.display = 'block';
+      blogPublicationInfo.innerHTML = '<strong>Publication</strong><br>' + details.publicationName;
+    } else {
+      blogPublicationInfo.style.display = 'none';
+      blogPublicationInfo.innerHTML = '';
+    }
+
+    if (details.articleUrl) {
+      blogArticleUrl.style.display = 'block';
+      blogArticleUrl.innerHTML = '<strong>URL</strong><br><a href="' + details.articleUrl + '" target="_blank" rel="noopener noreferrer">' + details.articleUrl + '</a>';
+    } else {
+      blogArticleUrl.style.display = 'none';
+      blogArticleUrl.innerHTML = '';
+    }
+
+    blogSlidePanel.classList.add('open');
+    blogSlideOverlay.classList.add('visible');
+    blogSlidePanel.setAttribute('aria-hidden', 'false');
+  }
+
+  document.querySelectorAll('.blog-read-btn').forEach(button => {
+    button.addEventListener('click', () => {
+      let descriptionHtml = '';
+      const descriptionId = button.dataset.descriptionId;
+      if (descriptionId) {
+        const descElement = document.getElementById(descriptionId);
+        descriptionHtml = descElement ? descElement.innerHTML : '';
+      }
+
+      openBlogSlide({
+        title: button.dataset.title,
+        subtitle: button.dataset.subtitle,
+        description: descriptionHtml,
+        image: button.dataset.image,
+        publicationName: button.dataset.publicationName,
+        publicationDate: button.dataset.publicationDate,
+        articleUrl: button.dataset.articleUrl,
+      });
+    });
+  });
+
+  if (blogSlideClose) {
+    blogSlideClose.addEventListener('click', closeBlogSlide);
+  }
+
+  if (blogSlideOverlay) {
+    blogSlideOverlay.addEventListener('click', closeBlogSlide);
+  }
+
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && blogSlidePanel && blogSlidePanel.classList.contains('open')) {
+      closeBlogSlide();
+    }
+  });
+
 

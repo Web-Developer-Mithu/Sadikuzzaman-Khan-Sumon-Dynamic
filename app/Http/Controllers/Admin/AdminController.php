@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Blog;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 
@@ -17,7 +19,11 @@ class AdminController extends Controller
     }
     public function dashboard()
     {
-        return view('Admin.admin_dashboard');
+        $blogCount = \App\Models\Blog::count();
+        $journalCount = \App\Models\Journal::count();
+        // Pending approvals: count of journals in draft state (can extend to other models)
+        $pendingApprovals = \App\Models\Journal::where('status','draft')->count();
+        return view('Admin.admin_dashboard', compact('blogCount','journalCount','pendingApprovals'));
     }
 
     public function logout(Request $request)
@@ -29,6 +35,70 @@ class AdminController extends Controller
     public function createBlogNews()
     {
         return view('Admin.Blogs.create_blog_news');
+    }
+
+    public function editProfile()
+    {
+        $user = Auth::user();
+        return view('Admin.profile_edit', compact('user'));
+    }
+
+    public function updateProfile(Request $request)
+    {
+        /** @var User $user */
+        $user = Auth::user();
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'hero_tagline' => 'nullable|string|max:255',
+            'hero_title' => 'nullable|string|max:255',
+            'hero_description' => 'nullable|string',
+            'phone' => 'nullable|string|max:60',
+            'contact_email' => 'nullable|email|max:255',
+            'address' => 'nullable|string',
+            'linkedin' => 'nullable|url|max:255',
+            'facebook' => 'nullable|url|max:255',
+            'twitter' => 'nullable|url|max:255',
+            'instagram' => 'nullable|url|max:255',
+            'wikipedia' => 'nullable|url|max:255',
+            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4096',
+        ]);
+
+        $validator->validate();
+
+        $data = $request->only([
+            'name',
+            'hero_tagline',
+            'hero_title',
+            'hero_description',
+            'phone',
+            'contact_email',
+            'address',
+            'linkedin',
+            'facebook',
+            'twitter',
+            'instagram',
+            'wikipedia',
+        ]);
+
+        if ($request->hasFile('profile_image') && $request->file('profile_image')->isValid()) {
+            if ($user->profile_image && File::exists(public_path('profile-images/' . $user->profile_image))) {
+                File::delete(public_path('profile-images/' . $user->profile_image));
+            }
+
+            $file = $request->file('profile_image');
+            $filename = 'profile-' . $user->id . '-' . time() . '.' . $file->getClientOriginalExtension();
+            $destination = public_path('profile-images');
+            if (!File::isDirectory($destination)) {
+                File::makeDirectory($destination, 0755, true);
+            }
+            $file->move($destination, $filename);
+            $data['profile_image'] = $filename;
+        }
+
+        $user->update($data);
+
+        return redirect()->back()->with('status', 'Profile updated successfully.');
     }
 
     public function storeBlog(Request $request)

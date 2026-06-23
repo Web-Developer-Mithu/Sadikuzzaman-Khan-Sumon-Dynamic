@@ -11,7 +11,7 @@
   padding: 0;
 }
 
-.table-wrap {
+    .table-wrap {
   border: 1px solid #d1d5db;
   border-radius: 10px;
   overflow: hidden;
@@ -111,54 +111,54 @@ td:nth-child(3) {
   background: #fee2e2;
 }
 
-body[data-bs-theme="dark"] .table-wrap {
+html[data-bs-theme="dark"] .table-wrap {
   border-color: #444444;
   background: #111111;
 }
 
-body[data-bs-theme="dark"] thead tr {
+html[data-bs-theme="dark"] thead tr {
   background: #0f172a;
 }
 
-body[data-bs-theme="dark"] th {
+html[data-bs-theme="dark"] th {
   color: #f8fafc;
   border-bottom: 1px solid #334155;
 }
 
-body[data-bs-theme="dark"] tbody tr {
+html[data-bs-theme="dark"] tbody tr {
   border-bottom: 1px solid #334155;
   background: #111827;
 }
 
-body[data-bs-theme="dark"] tbody tr:hover {
+html[data-bs-theme="dark"] tbody tr:hover {
   background: #1f2937;
 }
 
-body[data-bs-theme="dark"] td {
+html[data-bs-theme="dark"] td {
   color: #f8fafc;
 }
 
-body[data-bs-theme="dark"] .thumb {
+html[data-bs-theme="dark"] .thumb {
   border-color: #334155;
 }
 
-body[data-bs-theme="dark"] .btn-edit {
+html[data-bs-theme="dark"] .btn-edit {
   border: 1px solid #475569;
   background: #1e293b;
   color: #f8fafc;
 }
 
-body[data-bs-theme="dark"] .btn-edit:hover {
+html[data-bs-theme="dark"] .btn-edit:hover {
   background: #334155;
 }
 
-body[data-bs-theme="dark"] .btn-del {
+html[data-bs-theme="dark"] .btn-del {
   border: 1px solid #dc2626;
   background: #1e293b;
   color: #fecaca;
 }
 
-body[data-bs-theme="dark"] .btn-del:hover {
+html[data-bs-theme="dark"] .btn-del:hover {
   background: #5f2120;
 }
 </style>
@@ -167,6 +167,7 @@ body[data-bs-theme="dark"] .btn-del:hover {
     
 @endpush
 
+<div class="table-wrap">
 <table>
   <thead>
     <tr>
@@ -177,17 +178,24 @@ body[data-bs-theme="dark"] .btn-del:hover {
     </tr>
   </thead>
   <tbody>
+ @foreach ($blogs as $blog)
     <tr>
-      <td>1</td>
-      <td> About Mr Sadikuzzaman</td>
-      <td><img class="thumb" src="image1.jpg" alt="ব্লগ ইমেজ"></td>
+      <td>{{ $blogs->firstItem() + $loop->index }}</td>
+      <td> {{ $blog->{'blog-title'} }}</td>
+      <td><img class="thumb" src="{{ asset('blog-images/' . $blog->img) }}" alt="Blog Image"></td>
       <td>
-        <button class="btn-edit">✏️ Update</button>
-        <button class="btn-del">🗑️ Delete</button>
+      <a href="{{ url('/admin/edit-blog/'.$blog->id) }}" class="btn-edit">Edit</a>
+       <a href="{{ url('/admin/delete-blog/'.$blog->id) }}" onclick="return confirm('Are you sure you want to delete this blog?')" class="btn-del">Delete</a>
       </td>
-    </tr>
+    </tr>   
+ @endforeach
    
   </tbody>
 </table>
+</div>
+
+<div class="mt-4">
+    {{ $blogs->links() }}
+</div>
 
 @endsection
