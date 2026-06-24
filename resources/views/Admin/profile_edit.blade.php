@@ -68,6 +68,41 @@
                         <label class="form-label">Wikipedia URL</label>
                         <input type="url" name="wikipedia" class="form-control" value="{{ old('wikipedia', $user->wikipedia) }}">
                     </div>
+
+                    <!-- Custom Social Media -->
+                    <div class="col-md-12">
+                        <div class="card mt-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0">Other Social Media</h5>
+                                <button type="button" class="btn btn-sm btn-success" id="addSocialMediaBtn">+ Add More</button>
+                            </div>
+                            <div class="card-body">
+                                <div id="socialMediaContainer">
+                                    @php
+                                        $socialMedias = [];
+                                        if (!empty($user->social_media)) {
+                                            $socialMedias = is_array($user->social_media) ? $user->social_media : (json_decode($user->social_media, true) ?: []);
+                                        }
+                                    @endphp
+                                    @if(count($socialMedias) > 0)
+                                        @foreach($socialMedias as $index => $media)
+                                        <div class="social-media-item row gy-2 mb-3">
+                                            <div class="col-md-5">
+                                                <input type="text" name="social_media_name[]" class="form-control" placeholder="Platform name (e.g., YouTube, TikTok)" value="{{ $media['name'] ?? '' }}">
+                                            </div>
+                                            <div class="col-md-5">
+                                                <input type="url" name="social_media_url[]" class="form-control" placeholder="Profile URL" value="{{ $media['url'] ?? '' }}">
+                                            </div>
+                                            <div class="col-md-2">
+                                                <button type="button" class="btn btn-danger btn-sm w-100 removeSocialMediaBtn">Remove</button>
+                                            </div>
+                                        </div>
+                                        @endforeach
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="mt-4">
                     <button type="submit" class="btn btn-primary">Update Profile</button>
@@ -76,4 +111,42 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const addBtn = document.getElementById('addSocialMediaBtn');
+    const container = document.getElementById('socialMediaContainer');
+
+    addBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const newRow = document.createElement('div');
+        newRow.className = 'social-media-item row gy-2 mb-3';
+        newRow.innerHTML = `
+            <div class="col-md-5">
+                <input type="text" name="social_media_name[]" class="form-control" placeholder="Platform name (e.g., YouTube, TikTok)">
+            </div>
+            <div class="col-md-5">
+                <input type="url" name="social_media_url[]" class="form-control" placeholder="Profile URL">
+            </div>
+            <div class="col-md-2">
+                <button type="button" class="btn btn-danger btn-sm w-100 removeSocialMediaBtn">Remove</button>
+            </div>
+        `;
+        container.appendChild(newRow);
+        attachRemoveHandler(newRow.querySelector('.removeSocialMediaBtn'));
+    });
+
+    function attachRemoveHandler(btn) {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            btn.closest('.social-media-item').remove();
+        });
+    }
+
+    // Attach handlers to existing remove buttons
+    document.querySelectorAll('.removeSocialMediaBtn').forEach(btn => {
+        attachRemoveHandler(btn);
+    });
+});
+</script>
 @endsection

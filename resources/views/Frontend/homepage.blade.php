@@ -304,6 +304,51 @@
     </div>
   </section>
 
+  <!-- LATEST NEWS -->
+  @if(isset($blogs) && count($blogs) > 0)
+  <section class="section" id="latest-news" aria-labelledby="latest-news-title">
+    <div class="section-header reveal">
+      <span class="section-eyebrow">Newsroom</span>
+      <h2 class="section-title" id="latest-news-title">Latest News</h2>
+    </div>
+    <div class="blog-grid" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:20px; margin-top:16px;">
+      @php
+        $homeBlogs = $blogs instanceof \Illuminate\Contracts\Pagination\Paginator ? collect($blogs->items()) : collect($blogs);
+        $homeRecent = $homeBlogs->take(4);
+      @endphp
+      @foreach($homeRecent as $blog)
+        <div class="blog-card" style="border-radius:14px; overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,0.06); background:#fff;">
+          @if(!empty($blog->image_url))
+            <img src="{{ $blog->image_url }}" alt="{{ $blog->{'blog-title'} }}" style="width:100%; height:180px; object-fit:cover; display:block;">
+          @else
+            <div style="width:100%; height:180px; background:#f4f0e8; display:flex; align-items:center; justify-content:center; color:#9a8a70;">No image</div>
+          @endif
+          <div style="padding:16px; display:flex; flex-direction:column; gap:10px;">
+            <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+              <span style="background:#fff4dd; color:#8d6527; padding:6px 10px; border-radius:999px; font-weight:700; border:1px solid rgba(201,163,90,0.25); font-size:12px;">
+                @if($blog->publication_date)
+                  {{ \Carbon\Carbon::parse($blog->publication_date)->format('d M, Y') }}
+                @else
+                  {{ $blog->created_at->format('d M, Y') }}
+                @endif
+              </span>
+              @if($blog->publication_name)
+                <span style="background:#fff4dd; color:#8d6527; padding:6px 10px; border-radius:999px; font-weight:700; border:1px solid rgba(201,163,90,0.25); font-size:12px;">{{ $blog->publication_name }}</span>
+              @endif
+            </div>
+            <h3 style="margin:0; font-size:1.05rem; color:#111;">{{ \Illuminate\Support\Str::limit($blog->{'blog-title'}, 80) }}</h3>
+            <p style="margin:0; color:#555; line-height:1.6;">{{ \Illuminate\Support\Str::limit($blog->subtitle ?? $blog->description ?? '', 120) }}</p>
+            <div style="margin-top:auto; display:flex; gap:8px; align-items:center;">
+              <a href="{{ $blog->article_url ?? url('/blog') }}" target="_blank" rel="noopener noreferrer" style="background:#c9a35a; color:#fff; padding:10px 14px; border-radius:999px; text-decoration:none; font-weight:700;">View Source</a>
+              <a href="{{ url('/blog') }}" class="btn btn-outline-secondary" style="padding:8px 12px; border-radius:999px;">More</a>
+            </div>
+          </div>
+        </div>
+      @endforeach
+    </div>
+  </section>
+  @endif
+
   <!-- LEADERSHIP -->
   <section class="section" id="leadership" aria-labelledby="leadership-title">
     <div class="section-header reveal">
@@ -485,6 +530,13 @@
           @endif
           @if($wikipedia)
             <a href="{{ $wikipedia }}" target="_blank" rel="noopener noreferrer" class="badge bg-secondary text-white">Wikipedia</a>
+          @endif
+          @if(!empty($social_medias) && is_array($social_medias))
+            @foreach($social_medias as $s)
+              @if(!empty($s['url']))
+                <a href="{{ $s['url'] }}" target="_blank" rel="noopener noreferrer" class="badge bg-secondary text-white">{{ $s['name'] ?? 'Link' }}</a>
+              @endif
+            @endforeach
           @endif
         </div>
       </div>

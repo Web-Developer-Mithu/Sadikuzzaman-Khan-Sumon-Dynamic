@@ -33,6 +33,7 @@ class User extends Authenticatable
         'twitter',
         'instagram',
         'wikipedia',
+        'social_media',
     ];
 
     /**
@@ -53,5 +54,6 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'social_media' => 'json',
     ];
 }

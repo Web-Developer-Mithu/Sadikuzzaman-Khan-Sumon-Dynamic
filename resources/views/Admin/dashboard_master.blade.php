@@ -473,6 +473,59 @@
         html[data-bs-theme="light"] .footer-glow {
             box-shadow: 0 0 18px rgba(13, 110, 253, 0.22);
         }
+
+        @media (max-width: 992px) {
+            .app-main { margin-left: 0; padding: 1.25rem .9rem 3rem; }
+            .app-sidebar { position: relative; top: 0; width: 100%; height: auto; overflow: visible; }
+            .sidebar-brand { padding: 0.85rem 1rem; }
+            .app-content-header { padding-bottom: 1rem; }
+            .app-content-header .row { gap: 1rem; }
+            .app-content-header h3 { font-size: 1.4rem; }
+            .app-content-header p { font-size: 0.95rem; }
+            .breadcrumb { justify-content: flex-start; font-size: 0.85rem; }
+            .metric-box { padding: 1.2rem; }
+            .metric-box .icon { width: 2.5rem; height: 2.5rem; }
+            .metric-box h4 { font-size: 1.75rem; }
+            .metric-box p { font-size: 0.9rem; }
+            .card.card-glass { padding: 1.4rem; }
+            .card.card-glass .card-title { font-size: 1rem; }
+            .card.card-glass p { font-size: 0.95rem; }
+            .list-group-item { padding: 0.85rem 0.95rem; font-size: 0.92rem; }
+            .btn { font-size: 0.92rem; }
+            .app-main table { min-width: 100%; }
+            .table-wrap { overflow-x: auto; }
+        }
+
+        @media (max-width: 768px) {
+            .metric-box { min-height: auto; }
+            .card.card-glass { border-radius: 1rem; }
+            .app-content-header h3 { font-size: 1.25rem; }
+            .app-content-header p, .breadcrumb { font-size: 0.85rem; }
+            .list-group-item { padding: 0.8rem 0.9rem; }
+        }
+
+        @media (max-width: 576px) {
+            .app-main { padding: 1rem .75rem 2.25rem; }
+            .app-content-header { padding-bottom: 0.75rem; }
+            .app-content-header .row { gap: 0.75rem; }
+            .app-content-header h3 { font-size: 1.15rem; }
+            .app-content-header p, .breadcrumb { font-size: 0.8rem; }
+            .breadcrumb { flex-wrap: wrap; gap: 0.5rem; }
+            .metric-box { padding: 1rem; }
+            .metric-box .icon { width: 2.2rem; height: 2.2rem; }
+            .metric-box h4 { font-size: 1.45rem; }
+            .metric-box p { font-size: 0.82rem; }
+            .card.card-glass { padding: 1.1rem; }
+            .card.card-glass .card-title { font-size: 0.95rem; }
+            .card.card-glass p { font-size: 0.88rem; }
+            .btn { font-size: 0.86rem; padding: 0.5rem 0.9rem; }
+            .list-group-item { padding: 0.7rem 0.85rem; font-size: 0.88rem; }
+            .table-responsive { overflow-x: auto; }
+            .table-responsive table { min-width: 100%; }
+            .table-responsive img, .thumb { max-width: 120px; width: 100%; height: auto; }
+            .app-sidebar .nav-link { font-size: 0.95rem; padding: 0.7rem 0.95rem; }
+            .card-title, .app-content-header h3 { line-height: 1.2; }
+        }
     </style>
     @stack('css')
 </head>
@@ -495,7 +548,7 @@
                     </li>
                     <li class="nav-item d-none d-lg-flex">
                         <a href="{{ url('/admin/dashboard') }}" class="navbar-brand text-white fw-semibold ms-2">
-                            Sumon Admin
+                            Admin
                         </a>
                     </li>
                 </ul>
@@ -591,14 +644,18 @@
                     <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" data-accordion="false"
                         id="navigation">
 
-                         <li class="nav-item">
-                            <a href="{{ url('/admin/dashboard') }}" class="nav-link">
+                        <li class="nav-item">
+                            <a href="{{ url('/admin/dashboard') }}" class="nav-link {{ request()->is('admin/dashboard') ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-circle text-info"></i>
                                 <p>Dashboard</p>
                             </a>
                         </li>
-                        <li class="nav-item menu-open">
-                            <a href="#" class="nav-link active">
+
+                        @php
+                            $blogOpen = request()->is('create-blog-news') || request()->is('admin/blog-list');
+                        @endphp
+                        <li class="nav-item {{ $blogOpen ? 'menu-open' : '' }}">
+                            <a href="#" class="nav-link {{ $blogOpen ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-speedometer"></i>
                                 <p>
                                     Blog & News
@@ -607,13 +664,13 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="{{ url('/create-blog-news') }}" class="nav-link active">
+                                    <a href="{{ url('/create-blog-news') }}" class="nav-link {{ request()->is('create-blog-news') ? 'active' : '' }}">
                                         <i class="nav-icon bi bi-circle"></i>
                                         <p>Create Blog</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{ url('/admin/blog-list') }}" class="nav-link">
+                                    <a href="{{ url('/admin/blog-list') }}" class="nav-link {{ request()->is('admin/blog-list') ? 'active' : '' }}">
                                         <i class="nav-icon bi bi-circle"></i>
                                         <p>Blog List</p>
                                     </a>
@@ -624,14 +681,15 @@
                         
 
                         <li class="nav-item">
-                            <a href="{{ url('/admin/journals') }}" class="nav-link">
+                            <a href="{{ url('/admin/journals') }}" class="nav-link {{ request()->is('admin/journals*') ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-journal-bookmark"></i>
                                 <p>Journals <span class="badge bg-info ms-2 text-dark">New</span></p>
                             </a>
                         </li>
 
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
+                        @php $manageOpen = request()->is('admin/gallery*') || request()->is('admin/profile'); @endphp
+                        <li class="nav-item {{ $manageOpen ? 'menu-open' : '' }}">
+                            <a href="#" class="nav-link {{ $manageOpen ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-folder2-open"></i>
                                 <p>
                                     Manage
@@ -640,13 +698,13 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="{{ url('/admin/gallery') }}" class="nav-link">
+                                    <a href="{{ url('/admin/gallery') }}" class="nav-link {{ request()->is('admin/gallery*') ? 'active' : '' }}">
                                         <i class="nav-icon bi bi-circle"></i>
                                         <p>Gallery</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{ url('/admin/profile') }}" class="nav-link">
+                                    <a href="{{ url('/admin/profile') }}" class="nav-link {{ request()->is('admin/profile') ? 'active' : '' }}">
                                         <i class="nav-icon bi bi-circle"></i>
                                         <p>Profile Update</p>
                                     </a>
@@ -674,7 +732,15 @@
 
 
         <!--begin::App Main-->
-        @yield('content')
+        <main class="app-main">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        @yield('content')
+                    </div>
+                </div>
+            </div>
+        </main>
         <!--end::App Main-->
 
 

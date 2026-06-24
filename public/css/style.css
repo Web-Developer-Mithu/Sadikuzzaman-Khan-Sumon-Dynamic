@@ -93,6 +93,31 @@
     a { text-decoration:none; }
     ul { list-style:none; }
 
+    /* Reveal animations used across frontend (add 'reveal' class to elements) */
+    .reveal { opacity: 0; transform: translateY(18px) scale(.995); transition: opacity .6s cubic-bezier(.22,.9,.26,1), transform .6s cubic-bezier(.22,.9,.26,1); will-change: opacity, transform; }
+    .reveal.in-view { opacity: 1; transform: translateY(0) scale(1); }
+    .reveal.fade { transform: none; }
+
+    /* Admin layout fixes: keep sidebar fixed and main content scrollable to avoid overflow */
+    .app-sidebar { position: fixed; top: var(--nav-h); left: 0; width: 260px; height: calc(100vh - var(--nav-h)); overflow-y: auto; z-index: 1020; padding-bottom: 2rem; }
+    .app-main { margin-left: 260px; padding: 2rem 1.25rem 4rem; transition: margin .25s var(--ease); }
+    .app-sidebar, .app-main { will-change: transform, margin; }
+
+    /* Collapsed sidebar state (toggle with `.sidebar-collapsed` on body) */
+    body.sidebar-collapsed .app-sidebar { width: 72px; }
+    body.sidebar-collapsed .app-sidebar .sidebar-brand .brand-text { display:none; }
+    body.sidebar-collapsed .app-sidebar .nav-link { padding-left: 0.9rem; padding-right: 0.9rem; }
+    body.sidebar-collapsed .app-main { margin-left: 72px; }
+    @media (max-width: 991px) {
+      .app-sidebar { position: relative; width: 100%; top: 0; height: auto; }
+      .app-main { margin-left: 0; padding-top: 1rem; }
+    }
+
+    /* Subtle homepage visual polish */
+    .hero { padding: 4rem 0; border-radius: 12px; background: linear-gradient(180deg, rgba(13,110,253,0.06), rgba(14,165,233,0.03)); box-shadow: 0 18px 40px rgba(2,6,23,0.06); }
+    .btn-primary, .btn-primary:focus { background: linear-gradient(90deg,#0d6efd,#06b6d4); border: none; box-shadow: 0 8px 24px rgba(7,89,133,0.12); }
+    .container-max { max-width: 1100px; margin-left: auto; margin-right: auto; }
+
     /* ═══════════════════════════════
        SCROLL PROGRESS
     ═══════════════════════════════ */

@@ -54,7 +54,8 @@
   const revIO = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (e.isIntersecting) {
-        setTimeout(() => e.target.classList.add('visible'), 80);
+        const delay = parseInt(e.target.getAttribute('data-delay')) || 80;
+        setTimeout(() => e.target.classList.add('in-view'), delay);
         revIO.unobserve(e.target);
       }
     });
@@ -110,8 +111,9 @@
   const blogSlideTitleText = document.getElementById('blogSlideTitleText');
   const blogSlideSubtitleText = document.getElementById('blogSlideSubtitleText');
   const blogSlideDescriptionText = document.getElementById('blogSlideDescriptionText');
-  const blogPublicationInfo = document.getElementById('blogPublicationInfo');
-  const blogArticleUrl = document.getElementById('blogArticleUrl');
+  const blogSlidePublicationText = document.getElementById('blogSlidePublicationText');
+  const blogSlideSourceText = document.getElementById('blogSlideSourceText');
+  const blogSlideSourceLink = document.getElementById('blogSlideSourceLink');
   const blogSlideDate = document.getElementById('blogSlideDate');
 
   function closeBlogSlide() {
@@ -127,7 +129,7 @@
     blogSlideSubtitleText.textContent = details.subtitle || 'No subtitle.';
     const descriptionHtml = details.description || '<p>No description available.</p>';
     blogSlideDescriptionText.innerHTML = descriptionHtml;
-    blogSlideDate.textContent = details.publicationDate ? 'Publication Date: ' + details.publicationDate : '';
+    blogSlideDate.textContent = details.publicationDate || 'Unknown';
 
     if (details.image) {
       blogSlideImage.src = details.image;
@@ -137,20 +139,14 @@
       blogSlideImage.style.display = 'none';
     }
 
-    if (details.publicationName) {
-      blogPublicationInfo.style.display = 'block';
-      blogPublicationInfo.innerHTML = '<strong>Publication</strong><br>' + details.publicationName;
-    } else {
-      blogPublicationInfo.style.display = 'none';
-      blogPublicationInfo.innerHTML = '';
-    }
-
+    blogSlidePublicationText.textContent = details.publicationName || 'Not specified';
     if (details.articleUrl) {
-      blogArticleUrl.style.display = 'block';
-      blogArticleUrl.innerHTML = '<strong>URL</strong><br><a href="' + details.articleUrl + '" target="_blank" rel="noopener noreferrer">' + details.articleUrl + '</a>';
+      blogSlideSourceText.innerHTML = '<a href="' + details.articleUrl + '" target="_blank" rel="noopener noreferrer">View original source</a>';
+      blogSlideSourceLink.href = details.articleUrl;
+      blogSlideSourceLink.style.display = 'inline-flex';
     } else {
-      blogArticleUrl.style.display = 'none';
-      blogArticleUrl.innerHTML = '';
+      blogSlideSourceText.textContent = 'No source URL provided';
+      blogSlideSourceLink.style.display = 'none';
     }
 
     blogSlidePanel.classList.add('open');
@@ -176,6 +172,22 @@
         publicationDate: button.dataset.publicationDate,
         articleUrl: button.dataset.articleUrl,
       });
+    });
+  });
+
+  const blogTabs = document.querySelectorAll('.blog-tab');
+  const blogSections = document.querySelectorAll('.blog-section');
+
+  blogTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      blogTabs.forEach(btn => btn.classList.remove('active'));
+      blogSections.forEach(section => section.classList.remove('active'));
+
+      tab.classList.add('active');
+      const target = document.getElementById(tab.dataset.tab + 'Section');
+      if (target) {
+        target.classList.add('active');
+      }
     });
   });
 

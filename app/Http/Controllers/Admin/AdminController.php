@@ -61,6 +61,8 @@ class AdminController extends Controller
             'twitter' => 'nullable|url|max:255',
             'instagram' => 'nullable|url|max:255',
             'wikipedia' => 'nullable|url|max:255',
+            'social_media_name.*' => 'nullable|string|max:100',
+            'social_media_url.*' => 'nullable|url|max:255',
             'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4096',
         ]);
 
@@ -79,6 +81,7 @@ class AdminController extends Controller
             'twitter',
             'instagram',
             'wikipedia',
+            // social_media handled below
         ]);
 
         if ($request->hasFile('profile_image') && $request->file('profile_image')->isValid()) {
@@ -94,6 +97,26 @@ class AdminController extends Controller
             }
             $file->move($destination, $filename);
             $data['profile_image'] = $filename;
+        }
+
+        // Collect custom social media entries (names + urls)
+        $socials = [];
+        $names = $request->input('social_media_name', []);
+        $urls = $request->input('social_media_url', []);
+        if (is_array($names) && count($names) > 0) {
+            for ($i = 0; $i < count($names); $i++) {
+                $name = trim($names[$i] ?? '');
+                $url = trim($urls[$i] ?? '');
+                if ($name || $url) {
+                    $socials[] = ['name' => $name, 'url' => $url];
+                }
+            }
+        }
+
+        if (!empty($socials)) {
+            $data['social_media'] = $socials; // User model casts to json
+        } else {
+            $data['social_media'] = null;
         }
 
         $user->update($data);

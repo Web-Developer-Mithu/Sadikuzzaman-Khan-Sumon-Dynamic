@@ -88,6 +88,29 @@
     </script>
     <!--end::Color Mode Toggle-->
 
+    <!-- Sidebar toggle with transition and persistence -->
+    <script>
+        (function(){
+            const TOGGLE_SELECTOR = '[data-lte-toggle="sidebar"]';
+            const STORAGE_KEY = 'admin-sidebar-collapsed';
+            function setCollapsed(collapsed){
+                document.body.classList.toggle('sidebar-collapsed', collapsed);
+                localStorage.setItem(STORAGE_KEY, collapsed ? '1' : '0');
+            }
+            document.addEventListener('DOMContentLoaded', ()=>{
+                const stored = localStorage.getItem(STORAGE_KEY);
+                if(stored === '1') setCollapsed(true);
+                document.querySelectorAll(TOGGLE_SELECTOR).forEach(btn=>{
+                    btn.addEventListener('click', (e)=>{
+                        e.preventDefault();
+                        const isCollapsed = document.body.classList.toggle('sidebar-collapsed');
+                        localStorage.setItem(STORAGE_KEY, isCollapsed ? '1' : '0');
+                    });
+                });
+            });
+        })();
+    </script>
+
     <!-- OPTIONAL SCRIPTS -->
 
     <!-- sortablejs -->

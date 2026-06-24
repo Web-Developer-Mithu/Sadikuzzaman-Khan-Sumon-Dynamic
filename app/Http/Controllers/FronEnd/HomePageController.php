@@ -31,6 +31,7 @@ class HomePageController extends Controller
             'twitter' => optional($user)->twitter,
             'instagram' => optional($user)->instagram,
             'wikipedia' => optional($user)->wikipedia,
+            'social_medias' => optional($user)->social_media,
             'galleryItems' => $galleryItems,
             'journals' => $journals,
         ]);

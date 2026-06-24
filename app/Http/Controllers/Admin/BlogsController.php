@@ -60,6 +60,7 @@ class BlogsController extends Controller
     {
         // Paginate blogs (10 per page) and show newest first
         $blogs = Blog::orderBy('created_at', 'desc')->paginate(10);
+    
         return view('Admin.Blogs.blogList', compact('blogs'));
     
     }
