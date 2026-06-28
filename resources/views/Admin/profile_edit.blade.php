@@ -18,6 +18,10 @@
                         <input type="text" name="name" class="form-control" value="{{ old('name', $user->name) }}" required>
                     </div>
                     <div class="col-md-6">
+                        <label class="form-label">Email (username)</label>
+                        <input type="email" name="email" class="form-control" value="{{ old('email', $user->email) }}" required>
+                    </div>
+                    <div class="col-md-6">
                         <label class="form-label">Profile Image</label>
                         <input type="file" name="profile_image" class="form-control">
                         @if($user->profile_image)
@@ -27,6 +31,14 @@
                     <div class="col-md-12">
                         <label class="form-label">Hero Tagline</label>
                         <input type="text" name="hero_tagline" class="form-control" value="{{ old('hero_tagline', $user->hero_tagline) }}">
+                    </div>
+                    <div class="col-md-6 mt-2">
+                        <label class="form-label">New Password (leave blank to keep current)</label>
+                        <input type="password" name="password" class="form-control" autocomplete="new-password">
+                    </div>
+                    <div class="col-md-6 mt-2">
+                        <label class="form-label">Confirm New Password</label>
+                        <input type="password" name="password_confirmation" class="form-control" autocomplete="new-password">
                     </div>
                     <div class="col-md-12">
                         <label class="form-label">Hero Title</label>

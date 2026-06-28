@@ -8,7 +8,9 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class AdminController extends Controller
 {
@@ -50,6 +52,13 @@ class AdminController extends Controller
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                Rule::unique('users')->ignore($user->id),
+            ],
+            'password' => 'nullable|string|min:8|confirmed',
             'hero_tagline' => 'nullable|string|max:255',
             'hero_title' => 'nullable|string|max:255',
             'hero_description' => 'nullable|string',
@@ -70,6 +79,7 @@ class AdminController extends Controller
 
         $data = $request->only([
             'name',
+            'email',
             'hero_tagline',
             'hero_title',
             'hero_description',
@@ -117,6 +127,11 @@ class AdminController extends Controller
             $data['social_media'] = $socials; // User model casts to json
         } else {
             $data['social_media'] = null;
+        }
+
+        // If password provided, hash and set it explicitly
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->input('password'));
         }
 
         $user->update($data);

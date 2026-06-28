@@ -19,6 +19,6 @@ class Blog extends Model
             return $this->img;
         }
 
-        return asset('blog-images/'.$this->img);
+        return asset('blog-images/'.$this->img); 
     }
 }
