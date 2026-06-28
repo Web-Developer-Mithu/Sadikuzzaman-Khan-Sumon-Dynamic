@@ -480,7 +480,7 @@
 
 <!-- QUOTE -->
 <div class="quote-section" aria-label="Featured quote">
-  <div class="quote-inner reveal">
+  <div class="quote-inner reveal"> 
     <span class="quote-marks" aria-hidden="true">&ldquo;</span>
     <blockquote>Education is the most powerful weapon which you can use to change the world &mdash; and every institution I lead is a step toward a brighter Bangladesh.</blockquote>
     <cite>&mdash; Md. Sadikuzzaman, Principal &amp; PhD Researcher</cite>
@@ -499,7 +499,7 @@
       <div class="contact-card reveal">
         <div class="contact-icon-wrap" aria-hidden="true">&#128222;</div>
         <h4>Phone</h4>
-        <p>{{ $phone ?? '+601 4308 7663 (Malaysia)' }}</p>
+        <p>{{ $phone ?? '+60143087663 (Malaysia)' }}</p>
       </div>
       <div class="contact-card reveal" style="transition-delay:.12s">
         <div class="contact-icon-wrap" aria-hidden="true">&#9993;&#65039;</div>
