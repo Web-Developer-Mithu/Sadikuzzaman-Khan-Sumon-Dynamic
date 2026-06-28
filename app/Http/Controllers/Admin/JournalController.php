@@ -12,12 +12,12 @@ class JournalController extends Controller
     public function index()
     {
         $journals = Journal::orderBy('created_at', 'desc')->paginate(20);
-        return view('Admin.Journal.journal_list', compact('journals'));
+        return view('admin.journal.journal_list', compact('journals'));
     }
 
     public function create()
     {
-        return view('Admin.Journal.create_journal');
+        return view('admin.journal.create_journal');
     }
 
     public function store(Request $request)
@@ -73,7 +73,7 @@ class JournalController extends Controller
     public function edit($id)
     {
         $journal = Journal::findOrFail($id);
-        return view('Admin.Journal.edit_journal', compact('journal'));
+        return view('admin.journal.edit_journal', compact('journal'));
     }
 
     public function update(Request $request, $id)

@@ -17,12 +17,12 @@ class GalleryController extends Controller
     public function index()
     {
         $items = Gallery::orderBy('created_at', 'desc')->paginate(12);
-        return view('Admin.Gallery.gallery_list', compact('items'));
+        return view('admin.gallery.gallery_list', compact('items'));
     }
 
     public function create()
     {
-        return view('Admin.Gallery.create_gallery_item');
+        return view('admin.gallery.create_gallery_item');
     }
 
     public function store(Request $request)
@@ -58,7 +58,7 @@ class GalleryController extends Controller
     public function edit($id)
     {
         $item = Gallery::findOrFail($id);
-        return view('Admin.Gallery.create_gallery_item', compact('item'));
+        return view('admin.gallery.create_gallery_item', compact('item'));
     }
 
     public function update(Request $request, $id)

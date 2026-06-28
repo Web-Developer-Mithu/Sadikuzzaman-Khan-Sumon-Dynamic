@@ -5,7 +5,7 @@ $kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
 $kernel->handle(Illuminate\Http\Request::capture());
 
 try {
-    echo view('Admin.Blogs.blogList', ['blogs' => App\Models\Blog::paginate(10)])->render();
+    echo view('admin.blogs.blogList', ['blogs' => App\Models\Blog::paginate(10)])->render();
     echo "SUCCESS";
 } catch (\Throwable $e) {
     echo "ERROR: " . $e->getMessage() . "\n" . $e->getTraceAsString();

@@ -762,7 +762,7 @@
         <!--end::Footer-->
     </div>
     <!--end::App Wrapper-->
-    @include('Admin.admin_script')
+    @include('admin.admin_script')
     @stack('scripts')
 </body>
 <!--end::Body-->

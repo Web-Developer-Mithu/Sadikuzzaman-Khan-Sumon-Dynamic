@@ -16,7 +16,7 @@ class BlogsController extends Controller
 
     public function createBlogNews()
     {
-        return view('Admin.Blogs.create_blog_news');
+        return view('admin.blogs.create_blog_news');
     }
 
     public function storeBlog(Request $request)
@@ -61,7 +61,7 @@ class BlogsController extends Controller
         // Paginate blogs (10 per page) and show newest first
         $blogs = Blog::orderBy('created_at', 'desc')->paginate(10);
     
-        return view('Admin.Blogs.blogList', compact('blogs'));
+        return view('admin.blogs.blogList', compact('blogs'));
     
     }
 
@@ -83,7 +83,7 @@ class BlogsController extends Controller
     {
         $blog = Blog::findOrFail($id);
         // Reuse the create form for editing — view will detect $blog
-        return view('Admin.Blogs.create_blog_news', compact('blog'));
+        return view('admin.blogs.create_blog_news', compact('blog'));
     }
 
     // Handle update

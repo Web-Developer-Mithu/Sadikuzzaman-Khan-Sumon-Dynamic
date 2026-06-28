@@ -23,7 +23,7 @@ class AdminController extends Controller
         $journalCount = \App\Models\Journal::count();
         // Pending approvals: count of journals in draft state (can extend to other models)
         $pendingApprovals = \App\Models\Journal::where('status','draft')->count();
-        return view('Admin.admin_dashboard', compact('blogCount','journalCount','pendingApprovals'));
+        return view('admin.admin_dashboard', compact('blogCount','journalCount','pendingApprovals'));
     }
 
     public function logout(Request $request)
@@ -34,13 +34,13 @@ class AdminController extends Controller
 
     public function createBlogNews()
     {
-        return view('Admin.Blogs.create_blog_news');
+        return view('admin.blogs.create_blog_news');
     }
 
     public function editProfile()
     {
         $user = Auth::user();
-        return view('Admin.profile_edit', compact('user'));
+        return view('admin.profile_edit', compact('user'));
     }
 
     public function updateProfile(Request $request)
